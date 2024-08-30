@@ -10,11 +10,8 @@ def filter_datum(
         message: str,
         separator: str) -> str:
     """This fucntion will return the log message obfuscated"""
-    splited = message.split(separator)
     returned = message
-    for i in splited:
-        if i.startswith(fields[0]) or i.startswith(fields[1]):
-            spli = i.split("=")
-            pattern = re.escape(spli[1])
-            returned = re.sub(pattern, redaction, returned)
+    for i in fields:
+        pattern = rf'{i}=[^;]*'
+        returned = re.sub(pattern, rf'{i}={redaction}', returned)
     return returned
