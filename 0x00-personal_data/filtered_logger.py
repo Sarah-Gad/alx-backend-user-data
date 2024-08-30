@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """This module defines the filter_datum fucntion"""
+import logging
 import re
 from typing import List
-import logging
 
 
 def filter_datum(
