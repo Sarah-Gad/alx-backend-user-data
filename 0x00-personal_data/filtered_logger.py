@@ -1,8 +1,11 @@
 #!/usr/bin/env python3
 """This module defines the filter_datum fucntion"""
 import logging
+import os
 import re
 from typing import List
+import mysql.connector
+from mysql.connector import connection
 
 
 PII_FIELDS = ("name", "email", "phone", "ssn", "password")
@@ -31,6 +34,17 @@ def get_logger() -> logging.Logger:
     console_handler.setFormatter(formatter)
     logger.addHandler(console_handler)
     return logger
+
+
+def get_db() -> mysql.connector.connection.MySQLConnection:
+    """This fucntion returns a connector to the DB"""
+    connt = mysql.connector.connect(
+        user=os.environ.get("PERSONAL_DATA_DB_USERNAME"),
+        password=os.environ.get("PERSONAL_DATA_DB_PASSWORD"),
+        host=os.environ.get("PERSONAL_DATA_DB_HOST"),
+        database=os.environ.get("PERSONAL_DATA_DB_NAME")
+    )
+    return connt
 
 
 class RedactingFormatter(logging.Formatter):
