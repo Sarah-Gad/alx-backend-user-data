@@ -74,3 +74,12 @@ class BasicAuth(Auth):
         if not user.is_valid_password(user_pwd):
             return None
         return user
+
+    def current_user(self, request=None) -> TypeVar('User'):
+        """overloads Auth and retrieves the User instance for a request"""
+        auth_value = self.authorization_header(request)
+        base_64 = self.extract_base64_authorization_header(auth_value)
+        decoded = self.decode_base64_authorization_header(base_64)
+        email, password = self.extract_user_credentials(decoded)
+        user = self.user_object_from_credentials(email, password)
+        return user
