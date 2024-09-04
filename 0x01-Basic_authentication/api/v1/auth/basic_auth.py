@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """This module defines a child class"""
 from api.v1.auth.auth import Auth
+import base64
 
 
 class BasicAuth(Auth):
@@ -21,3 +22,19 @@ class BasicAuth(Auth):
         else:
             first, second = authorization_header.split(" ")
             return second
+
+    def decode_base64_authorization_header(
+            self,
+            base64_authorization_header: str) -> str:
+        """This method returns the decoded str"""
+        if base64_authorization_header is None:
+            return None
+        elif not isinstance(base64_authorization_header, str):
+            return None
+        else:
+            try:
+                return base64.b64decode(
+                    base64_authorization_header.encode(
+                        "utf_8")).decode("utf_8")
+            except(base64.binascii.Error, ValueError):
+                return None
