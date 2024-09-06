@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """This module creates a new view to log in"""
-from flask import request, jsonify, make_response
+from flask import request, jsonify, make_response, abort
 from api.v1.views import app_views
 from models.user import User
 import os
@@ -30,3 +30,16 @@ def post_credentials():
         value=session_id
     )
     return response
+
+
+@app_views.route(
+        '/auth_session/logout',
+        methods=['DELETE'],
+        strict_slashes=False)
+def logout():
+    """This fucntion is for logging out"""
+    from api.v1.app import auth
+    if not auth.destroy_session(request):
+        abort(404)
+    else:
+        return jsonify({}), 200
