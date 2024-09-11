@@ -44,8 +44,9 @@ class DB:
             new_user = None
         return new_user
 
-    def find_user_by(self, **kwargs: dict) -> User:
-        """This method finds a user from the database"""
+    def find_user_by(self, **kwargs) -> User:
+        """Finds a user based on a set of filters.
+        """
         fields, values = [], []
         for key, value in kwargs.items():
             if hasattr(User, key):
