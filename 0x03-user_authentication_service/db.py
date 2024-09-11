@@ -46,16 +46,15 @@ class DB:
 
     def find_user_by(self, **kwargs: dict) -> User:
         """This method finds a user from the database"""
+        query = self._session.query(User)
         try:
             for key, value in kwargs.items():
-                if not hasattr(User, key):
+                column = getattr(User, key, None)
+                if column:
+                    query = query.filter(column == value)
+                else:
                     raise InvalidRequestError
-                user = self._session.query(
-                    User).filter(
-                        getattr(User, key, None) == value).first()
-            if user is None:
-                raise NoResultFound
-            else:
-                return user
+            result = query.one()
+            return result
         except (InvalidRequestError, NoResultFound):
             raise
