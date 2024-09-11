@@ -54,7 +54,7 @@ class DB:
                     query = query.filter(column == value)
                 else:
                     raise InvalidRequestError
-            result = query.one()
+            result = query.first()
             return result
         except (InvalidRequestError, NoResultFound):
             raise
