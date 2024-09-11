@@ -50,9 +50,6 @@ class DB:
                 user = self._session.query(
                     User).filter(
                         getattr(User, key, None) == value).first()
-            if user is None:
-                raise NoResultFound
-            else:
-                return user
+            return user
         except (InvalidRequestError, NoResultFound):
             raise
