@@ -48,6 +48,8 @@ class DB:
         """This method finds a user from the database"""
         try:
             for key, value in kwargs.items():
+                if not hasattr(User, key):
+                    raise InvalidRequestError
                 user = self._session.query(
                     User).filter(
                         getattr(User, key, None) == value).first()
