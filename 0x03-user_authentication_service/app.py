@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
 """This module sets up a flask app"""
 from flask import Flask, jsonify, make_response, abort
+from flask import redirect, url_for
 from auth import Auth
 from flask import request
+from sqlalchemy.orm.exc import NoResultFound
 
 
 app = Flask(__name__)
@@ -44,6 +46,19 @@ def login():
         return response
     else:
         abort(401)
+
+
+@app.route('/sessions', methods=['DELETE'], strict_slashes=False)
+def logout():
+    """This method is used for logging out"""
+    cookies = request.cookies
+    session_id = cookies.get("session_id")
+    try:
+        user = AUTH.get_user_from_session_id(session_id)
+        AUTH.destroy_session(user.id)
+        return redirect(url_for('homepage'))
+    except NoResultFound:
+        abort(403)
 
 
 if __name__ == "__main__":
