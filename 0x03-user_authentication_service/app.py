@@ -4,7 +4,6 @@ from flask import Flask, jsonify, make_response, abort
 from flask import redirect, url_for
 from auth import Auth
 from flask import request
-from sqlalchemy.orm.exc import NoResultFound
 
 
 app = Flask(__name__)
@@ -58,6 +57,17 @@ def logout():
         abort(403)
     AUTH.destroy_session(user.id)
     return redirect(url_for('homepage'))
+
+
+@app.route('/profile', methods=['GET'], strict_slashes=False)
+def profile():
+    """Profile method"""
+    cookies = request.cookies
+    session_id = cookies.get("session_id")
+    user = AUTH.get_user_from_session_id(session_id)
+    if not user:
+        abort(403)
+    return jsonify({"email": user.email}), 200
 
 
 if __name__ == "__main__":
