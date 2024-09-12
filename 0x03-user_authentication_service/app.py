@@ -53,12 +53,11 @@ def logout():
     """This method is used for logging out"""
     cookies = request.cookies
     session_id = cookies.get("session_id")
-    try:
-        user = AUTH.get_user_from_session_id(session_id)
-        AUTH.destroy_session(user.id)
-        return redirect(url_for('homepage'))
-    except NoResultFound:
+    user = AUTH.get_user_from_session_id(session_id)
+    if not user:
         abort(403)
+    AUTH.destroy_session(user.id)
+    return redirect(url_for('homepage'))
 
 
 if __name__ == "__main__":
