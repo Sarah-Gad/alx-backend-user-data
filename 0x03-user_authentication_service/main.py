@@ -2,13 +2,16 @@
 """
 Main file
 """
-from auth import Auth
+import requests
 
-email = 'bob@bob.com'
-password = 'MyPwdOfBob'
-auth = Auth()
+EMAIL = "guillaume@holberton.io"
+PASSWD = "b4l0u"
+NEW_PASSWD = "t4rt1fl3tt3"
 
-auth.register_user(email, password)
+def register_user(EMAIL, PASSWD):
+    resonse = requests.post("http://localhost:5000/users", data={"email": EMAIL, "password": PASSWD})
+    assert resonse.status_code == 200
+    assert resonse.json() == {"email": EMAIL, "message": "user created"}
 
-print(auth.create_session(email))
-print(auth.create_session("unknown@email.com"))
+if __name__ == "__main__":
+    register_user(EMAIL, PASSWD)
